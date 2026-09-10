@@ -1,4 +1,4 @@
-namespace Wallpaper.Api.Contracts;
+namespace PicApp.Api.Contracts;
 
 public sealed record WallpaperListItem(long Id, string Title, string? ThumbnailUrl, string Category, int Width, int Height, string SourceName);
 public sealed record WallpaperDetail(long Id, string Title, string? ThumbnailUrl, string? OriginalUrl, string Category, int Width, int Height, string SourceName, string SourcePageUrl);
