@@ -1,6 +1,6 @@
-using Wallpaper.Api.Models;
+using PicApp.Api.Models;
 
-namespace Wallpaper.Api.Sources;
+namespace PicApp.Api.Sources;
 
 public interface IWallpaperSource
 {
