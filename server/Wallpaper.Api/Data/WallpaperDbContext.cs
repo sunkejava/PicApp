@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Wallpaper.Api.Models;
+using PicApp.Api.Models;
 
-namespace Wallpaper.Api.Data;
+namespace PicApp.Api.Data;
 
 public sealed class WallpaperDbContext(DbContextOptions<WallpaperDbContext> options) : DbContext(options)
 {
