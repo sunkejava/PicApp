@@ -1,4 +1,4 @@
-namespace Wallpaper.Api.Models;
+namespace PicApp.Api.Models;
 
 /// <summary>采集后缓存在本系统的壁纸元数据，不保存或再分发图片文件。</summary>
 public sealed class Wallpaper
