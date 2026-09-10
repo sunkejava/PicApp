@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Wallpaper.Api.Data;
-using Wallpaper.Api.Sources;
+using PicApp.Api.Data;
+using PicApp.Api.Sources;
 
-namespace Wallpaper.Api.Services;
+namespace PicApp.Api.Services;
 
 public sealed class WallpaperSyncService(IServiceScopeFactory scopeFactory, IWallpaperSource source, ILogger<WallpaperSyncService> logger) : BackgroundService
 {
