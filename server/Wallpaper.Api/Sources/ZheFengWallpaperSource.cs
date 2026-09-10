@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using AngleSharp;
-using Wallpaper.Api.Models;
+using PicApp.Api.Models;
 
-namespace Wallpaper.Api.Sources;
+namespace PicApp.Api.Sources;
 
 /// <summary>
 /// 只读取来源公开 HTML 中的链接和图片元数据。页面结构变化时可单独替换该适配器。
