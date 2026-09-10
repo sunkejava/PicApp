@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Wallpaper.Api.Contracts;
-using Wallpaper.Api.Data;
-using Wallpaper.Api.Sources;
-using Wallpaper.Api.Services;
+using PicApp.Api.Contracts;
+using PicApp.Api.Data;
+using PicApp.Api.Sources;
+using PicApp.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<WallpaperDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
@@ -10,7 +10,10 @@ builder.Services.AddHttpClient<IWallpaperSource, ZheFengWallpaperSource>(client 
 builder.Services.AddSingleton<WallpaperSyncService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<WallpaperSyncService>());
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
-builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.WithOrigins(allowedOrigins).AllowAnyMethod().AllowAnyHeader()));
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+{
+    policy.WithOrigins(allowedOrigins).AllowAnyMethod().AllowAnyHeader();
+}));
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -25,12 +28,15 @@ app.MapGet("/api/wallpapers", async (WallpaperDbContext db, string? category, st
     if (!string.IsNullOrWhiteSpace(category) && category != "全部") query = query.Where(x => x.Category == category);
     if (!string.IsNullOrWhiteSpace(keyword)) query = query.Where(x => x.Title.Contains(keyword));
     var total = await query.CountAsync(ct);
-    var items = await query.OrderByDescending(x => x.UpdatedAtUtc).Skip((page - 1) * pageSize).Take(pageSize).Select(x => new WallpaperListItem(x.Id, x.Title, x.ThumbnailUrl, x.Category, x.Width, x.Height, x.SourceName)).ToListAsync(ct);
+    var items = await query.OrderByDescending(x => x.UpdatedAtUtc).Skip((page - 1) * pageSize).Take(pageSize)
+        .Select(x => new WallpaperListItem(x.Id, x.Title, x.ThumbnailUrl, x.Category, x.Width, x.Height, x.SourceName)).ToListAsync(ct);
     return Results.Ok(new PagedResult<WallpaperListItem>(items, page, pageSize, total));
 });
+
 app.MapGet("/api/wallpapers/{id:long}", async (long id, WallpaperDbContext db, CancellationToken ct) =>
 {
-    var item = await db.Wallpapers.AsNoTracking().Where(x => x.Id == id).Select(x => new WallpaperDetail(x.Id, x.Title, x.ThumbnailUrl, x.OriginalUrl, x.Category, x.Width, x.Height, x.SourceName, x.SourcePageUrl)).SingleOrDefaultAsync(ct);
+    var item = await db.Wallpapers.AsNoTracking().Where(x => x.Id == id)
+        .Select(x => new WallpaperDetail(x.Id, x.Title, x.ThumbnailUrl, x.OriginalUrl, x.Category, x.Width, x.Height, x.SourceName, x.SourcePageUrl)).SingleOrDefaultAsync(ct);
     return item is null ? Results.NotFound() : Results.Ok(item);
 });
 app.MapGet("/api/categories", async (WallpaperDbContext db, CancellationToken ct) => Results.Ok(await db.Wallpapers.AsNoTracking().Select(x => x.Category).Distinct().OrderBy(x => x).ToListAsync(ct)));
