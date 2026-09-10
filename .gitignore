@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+server/Wallpaper.Api/App_Data/
+.DS_Store
