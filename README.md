@@ -47,6 +47,8 @@ npm run dev:weapp
 
 `server/Wallpaper.Api/appsettings.json` 中的 `WallpaperSource:SourcePageUrl` 指向公开列表页。后台每 6 小时采集一次，也可调用 `POST /api/admin/sources/sync` 立即同步。若来源方提供正式 API，应实现 `IWallpaperSource` 并替换网页采集方式。
 
+生产环境请通过环境变量 `Admin__SyncApiKey` 配置同步密钥，并把小程序的正式 HTTPS 域名加入 `Cors:AllowedOrigins`；手动同步请求需携带 `X-Api-Key` 请求头。
+
 ## 自动发布
 
 推送到 `main` 会执行构建并保留流水线产物。推送标签（例如 `git tag v0.1.0 && git push origin v0.1.0`）会自动创建 GitHub Release，附件包括：
